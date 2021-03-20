@@ -1,30 +1,34 @@
 <template>
   <div class="admin-post-page">
     <section class="update-form">
-      <admin-post-form :post="loadedPost"></admin-post-form>
+      <AdminPostForm :post="loadedPost" @submit="onsubmitted" />
     </section>
   </div>
 </template>
 
 <script>
-import AdminPostForm from "~/components/Admin/AdminPostForm";
+import AdminPostForm from '@/components/Admin/AdminPostForm'
 
 export default {
-  name: "index",
-  layout:'admin',
+  layout: 'admin',
   components: {
     AdminPostForm
   },
-  data(){
-    return{
-      loadedPost:{
-        author:'Maximilian',
-        title:'My awesome Post',
-        content:'Super amazing ,thanks for that!',
-        thumbnailLink: 'https://static.pexels.com/photos/270348/pexels-photo-270348.jpeg'
-,      }
+  asyncData(context) {
+    return context.app.$axios.$get('/posts/'+context.params.postId+'.json')
+      .then(data=>{
+        return {
+          loadedPost : {...data , id: context.params.postId}
+        }
+      }).catch(e=>context.error());
+  },
+  methods:{
+    onsubmitted(editedPost){
+      this.$store.dispatch('editPost',editedPost)
+      .then(()=>{
+        this.$router.push('/admin');
+      })
     }
-
   }
 }
 </script>
@@ -34,6 +38,7 @@ export default {
   width: 90%;
   margin: 20px auto;
 }
+
 @media (min-width: 768px) {
   .update-form {
     width: 500px;

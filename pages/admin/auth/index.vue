@@ -16,16 +16,11 @@
 </template>
 
 <script>
-import AppControlInput from '@/components/UI/AppControlInput'
-import AppButton from '@/components/UI/AppButton'
+
 
 export default {
   name: 'AdminAuthPage',
   layout: 'admin',
-  components: {
-    AppControlInput,
-    AppButton
-  },
   data() {
     return {
       isLogin: true
@@ -49,3 +44,4 @@ export default {
   box-sizing: border-box;
 }
 </style>
+

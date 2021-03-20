@@ -4,8 +4,11 @@
 
     <AppControlInput v-model="editedPost.title">Title</AppControlInput>
 
-    <AppControlInput v-model="editedPost.thumbnailLink">Thumbnail Link</AppControlInput>
-
+    <AppControlInput v-model="editedPost.thumbnail">Thumbnail Link</AppControlInput>
+    <AppControlInput
+      control-type="textarea"
+      v-model="editedPost.previewText">Preview Text
+    </AppControlInput>
     <AppControlInput
       control-type="textarea"
       v-model="editedPost.content">Content
@@ -23,14 +26,10 @@
 </template>
 
 <script>
-import AppButton from "~/components/UI/AppButton";
-import AppControlInput from "~/components/UI/AppControlInput";
+
 
 export default {
   name: "AdminPostForm",
-  components: {
-    AppControlInput, AppButton
-  },
   props: {
     post: {
       type: Object,
@@ -45,8 +44,9 @@ export default {
         } : {
           author: '',
           title: '',
-          thumbnailLink: '',
-          content: ''
+          thumbnail: '',
+          content: '',
+          previewText:''
         }
 
       }
@@ -56,7 +56,7 @@ export default {
   methods: {
     onSave() {
       //save the post
-      console.log(this.editedPost);
+    this.$emit('submit',this.editedPost);
     },
     onCancel() {
       //Navigate back
