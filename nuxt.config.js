@@ -1,5 +1,8 @@
+const bodyParser = require('body-parser'); // express js middleware node package
+const axios = require('axios');
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  mode: 'universal',
   head: {
     title: 'nuxt-blog',
     meta: [
@@ -44,7 +47,7 @@ export default {
     '@nuxtjs/axios',
   ],
   axios: {
-    baseURL:process.env.BASE_URL || 'https://nuxt-blog-db96c-default-rtdb.firebaseio.com'
+    baseURL: process.env.BASE_URL || 'https://nuxt-blog-db96c-default-rtdb.firebaseio.com'
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -61,11 +64,39 @@ export default {
 
   },
   env: {
-    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-db96c-default-rtdb.firebaseio.com'
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-db96c-default-rtdb.firebaseio.com',
+    fbAPIKey: 'AIzaSyAJXwvKKc-9Tyb8GEyMIGYp-9fSvK-MrJs'
   },
 
-  transition:{
-    name:'fade',
-    mode:'out-in',
+  transition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
+  router: {
+    middleware: ['log']
+  },
+  serverMiddleware: [
+    bodyParser.json(),
+    '~api'
+  ],
+  generate: {
+    routes: function () {
+      return axios.get('https://nuxt-blog-db96c-default-rtdb.firebaseio.com/posts.json')
+        .then((res) => {
+          const routes = [];
+          for (const key in res.data) {
+            routes.push({
+              route: '/posts/' + key,
+              payload: {
+                postData: res.data[key]
+              }
+            })
+          }
+          return routes;
+        })
+      // return[
+      //   '/posts/-MWDugCP9OWEX543C_Hj'
+      // ]
+    }
   }
 }
